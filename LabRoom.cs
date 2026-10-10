@@ -1,4 +1,8 @@
-using System;
+/* ********************
+ * Mã sinh viên: 202418889
+ * Họ tên: Đặng Thị Hương Giang
+ * ********************/
+ using System;
 using System.Collections.Generic;
 
 public class LabRoom

@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* ********************
+ * Mã sinh viên: 202418889
+ * Họ tên: Đặng Thị Hương Giang
+ * ********************/
+ using System;
 using System.Collections.Generic;
 
 class Program
@@ -60,7 +64,7 @@ class Program
         Console.WriteLine("--- TEST KẾT NỐI MẠNG ---");
         List<Device> tatCaMay = new List<Device> { mt1, mt2, mayIn1, mayIn2, mayChieu1 };
         
-        foreach (var d in tatcamay)
+        foreach (var d in tatCaMay)
         {
             if (d is INetworkable netDevice) 
             {
