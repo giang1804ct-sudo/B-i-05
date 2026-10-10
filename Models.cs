@@ -1,6 +1,6 @@
 /* ********************
- * Mã sinh viên: 202418889
- * Họ tên: Đặng thị Hương Giang 
+ * Mã sinh viên: [Điền mã của bạn]
+ * Họ tên: Đặng Thị Hương Giang
  * ********************/
 using System;
 
@@ -8,10 +8,10 @@ public enum DeviceStatus { Active, UnderMaintenance, Retired }
 
 public interface INetworkable
 {
-    string IpAddress { get; }
-    void Connect(string ipAddress);
-    void Disconnect();
-    bool IsConnected { get; }
+ string IpAddress { get; }
+ void Connect(string ip);
+ void Disconnect();
+ bool IsConnected { get; }
 }
 
 public abstract class Device
@@ -24,7 +24,7 @@ public abstract class Device
 
     public Device(string id, string name, int year, decimal price)
     {
-       
+        // TODO:  check điều kiện (giá > 0, năm...)
         Id = id;
         Name = name;
         Year = year;
@@ -32,116 +32,118 @@ public abstract class Device
         Status = DeviceStatus.Active;
     }
 
-    public abstract decimal CalculateExpectedAnnualMaintenanceCost();
+    public abstract decimal Tinhtienbaotri(); 
 
     public override string ToString()
     {
-        return $"[{Id}] {Name} - Nam: {Year} - Gia: {Price} - Trang thai: {Status}";
+        return $"[{Id}] {Name} - Năm: {Year} - Giá: {Price:N0} - Trạng thái: {Status}";
     }
 }
 
 public class Computer : Device, INetworkable
 {
-    public int Ram { get; set; }
-    public string Processor { get; set; }
-    public bool HasGPU { get; set; }
+  public int Ram { get; set; }
+  public string CPU { get; set; }
+  public bool CoCardroi { get; set; } 
     
-    public string IpAddress { get; private set; }
-    public bool IsConnected { get; private set; }
+ public string IpAddress { get; private set; }
+ public bool IsConnected { get; private set; }
 
-    public Computer(string id, string name, int year, decimal price, int ram, string processor, bool hasGPU) 
+    public Computer(string id, string name, int year, decimal price, int ram, string cpu, bool cocardroi) 
         : base(id, name, year, price)
     {
         Ram = ram;
-        Processor = processor;
-        HasGPU = hasGPU;
+        CPU = cpu;
+        CoCardroi = cocardroi;
     }
 
-    public override decimal CalculateExpectedAnnualMaintenanceCost()
+    public override decimal Tinhtienbaotri()
     {
-        decimal cost = Price * 0.05m;
-        if (HasGPU) cost += Price * 0.02m;
-        
-        return cost;
+        decimal tien = Price * 0.05m;
+        if (CoCardroi) 
+        {
+            tien += Price * 0.02m;
+        }
+       
+        return tien;
     }
 
-    public void Connect(string ipAddress)
+    public void Connect(string ip)
     {
-        if (string.IsNullOrEmpty(ipAddress) || IsConnected) return;
-        IpAddress = ipAddress;
+        if (string.IsNullOrEmpty(ip) || IsConnected) return;
+        IpAddress = ip;
         IsConnected = true;
     }
 
     public void Disconnect()
     {
-        IpAddress = string.Empty;
+        IpAddress = "";
         IsConnected = false;
     }
 }
 
 public class Printer : Device
 {
-    public string Type { get; set; } 
-        public int PrintedPages { get; set; }
-    public bool IsColor { get; set; } 
+    public string Loaimay { get; set; } // Laser hoặc In phun
+    public int Sotrangdain { get; set; }
+    public bool Inmau { get; set; }
 
-    public Printer(string id, string name, int year, decimal price, string type, int pages, bool isColor) 
+    public Printer(string id, string name, int year, decimal price, string loaiMay, int soTrang, bool inMau) 
         : base(id, name, year, price)
     {
-        Type = type;
-        PrintedPages = pages;
-        IsColor = isColor;
+        Loaimay = loaiMay;
+        Sotrangdain = soTrang;
+        Inmau = inMau;
     }
 
-    public override decimal CalculateExpectedAnnualMaintenanceCost()
+    public override decimal Tinhtienbaotri()
     {
-        decimal cost = Price * 0.04m;
-        if (PrintedPages > 100000) cost += 500000;
-        if (IsColor) cost += 300000;
-        return cost;
+        decimal tien = Price * 0.04m;
+        if (Sotrangdain > 100000) tien += 500000;
+        if (Inmau) tien += 300000;
+        return tien;
     }
 }
 
-
+// Máy in mạng
 public class NetworkPrinter : Printer, INetworkable
 {
     public string IpAddress { get; private set; }
     public bool IsConnected { get; private set; }
 
-    public NetworkPrinter(string id, string name, int year, decimal price, string type, int pages, bool isColor) 
-        : base(id, name, year, price, type, pages, isColor) { }
+    public NetworkPrinter(string id, string name, int year, decimal price, string loaiMay, int soTrang, bool inMau) 
+        : base(id, name, year, price, loaiMay, soTrang, inMau) { }
 
-    public void Connect(string ipAddress)
+    public void Connect(string ip)
     {
-        if (string.IsNullOrEmpty(ipAddress) || IsConnected) return;
-        IpAddress = ipAddress;
+        if (string.IsNullOrEmpty(ip) || IsConnected) return;
+        IpAddress = ip;
         IsConnected = true;
     }
 
     public void Disconnect()
     {
-        IpAddress = string.Empty;
+        IpAddress = "";
         IsConnected = false;
     }
 }
 
 public class Projector : Device
 {
-    public int Brightness { get; set; }
-    public int LampHours { get; set; }
-    public int MaxLampLife { get; set; } 
-    public Projector(string id, string name, int year, decimal price, int brightness, int lampHours) 
+    public int Dosang { get; set; }
+    public int Giobongden { get; set; }
+
+    public Projector(string id, string name, int year, decimal price, int dosang, int giobongden) 
         : base(id, name, year, price)
     {
-        Brightness = brightness;
-        LampHours = lampHours;
-        MaxLampLife = 5000; 
+        Dosang = dosang;
+        Giobongden = giobongden;
     }
 
-    public override decimal CalculateExpectedAnnualMaintenanceCost()
+    public override decimal Tinhtienbaotri()
     {
-        decimal cost = Price * 0.03m;
-        if (LampHours > 3000) cost += 1500000;
-        return cost;
+        decimal tien = Price * 0.03m;
+        if (Giobongden > 3000) tien += 1500000;
+        return tien;
     }
 }
