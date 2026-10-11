@@ -7,70 +7,79 @@ using System.Collections.Generic;
 
 public class LabRoom
 {
-    public string Maphong { get; set; }
-    public string Tenphong { get; set; }
-    public int Succhua { get; set; }
-    private List<Device> danhsachmay;
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public int Capacity { get; set; }
+    private List<Device> Devices;
+
     public LabRoom(string id, string name, int capacity)
     {
-     Maphong = id;
-     Tenphong = name;
-     Succhua = capacity;
-        danhsachmay = new List<Device>();
+        Id = id;
+        Name = name;
+        Capacity = capacity;
+        Devices = new List<Device>();
     }
 
-    public void ThemThietBi(Device d)
+    public void AddDevice(Device device)
     {
-        // TODO: quen chua check trung ID
-        danhsachmay.Add(d);
+        if (device == null) return;
+
+        if (FindDevice(device.Id) != null)
+        {
+            Console.WriteLine($"[Lỗi] Thiết bị mã {device.Id} đã tồn tại trong phòng!");
+            return;
+        }
+
+        Devices.Add(device);
     }
 
-    public bool Xoahietbi(string id)
+    public bool RemoveDevice(string deviceId)
     {
-        Device d = Timthietbi(id);
+        Device? d = FindDevice(deviceId); // Thêm ? để fix cảnh báo vàng
         if (d != null)
         {
-         danhsachmay.Remove(d);
+            Devices.Remove(d);
             return true;
         }
         return false;
     }
 
-    public Device Timthietbi(string id)
+    public Device? FindDevice(string deviceId) // Thêm ? để fix cảnh báo vàng
     {
-     foreach (var d in danhsachmay)
+        foreach (var d in Devices)
         {
-         if (d.Id == id) return d;
+            if (d.Id == deviceId) return d;
         }
         return null;
     }
 
-    public decimal Tinhtongtienbaotri()
+    public decimal CalculateAnnualMaintenanceCost()
     {
-        decimal tong = 0;
-        foreach (var d in danhsachmay)
+        decimal total = 0;
+        foreach (var d in Devices)
         {
-            tong += d.Tinhtienbaotri(); 
+            // Sửa lỗi đỏ: Đổi TinhTienBaoTri thành tên tiếng Anh
+            total += d.CalculateExpectedAnnualMaintenanceCost(); 
         }
-        return tong;
+        return total;
     }
 
-    public List<Device> Laymaycanbaotri()
+    public List<Device> GetDevicesRequiringMaintenance()
     {
-        List<Device> kq = new List<Device>();
-        foreach (var d in danhsachmay)
+        List<Device> result = new List<Device>();
+        foreach (var d in Devices)
         {
-            int soNam = DateTime.Now.Year - d.Year;
-            if (d.Status == DeviceStatus.UnderMaintenance || soNam > 5)
+            int age = DateTime.Now.Year - d.Year;
+            if (d.Status == DeviceStatus.UnderMaintenance || age > 5)
             {
-                kq.Add(d);
+                result.Add(d);
             }
         }
-        return kq;
+        return result;
     }
 
-    public List<Device> Laytatcamay()
+    public List<Device> GetAllDevices()
     {
-        return danhsachmay;
+        return Devices;
     }
 }

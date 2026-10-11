@@ -2,38 +2,46 @@
  * Mã sinh viên: 202418889
  * Họ tên: Đặng Thị Hương Giang
  * ********************/
- public class Computer : Device, INetworkable
-{
-  public int Ram { get; set; }
-  public string CPU { get; set; }
-  public bool CoCardroi { get; set; } 
-    
- public string IpAddress { get; private set; }
- public bool IsConnected { get; private set; }
+ using System;
 
-    public Computer(string id, string name, int year, decimal price, int ram, string cpu, bool cocardroi) 
+public class Computer : Device, INetworkable
+{
+    public int Ram { get; set; }
+    public string Processor { get; set; }
+    public bool HasGPU { get; set; }
+    
+    public string IpAddress { get; private set; } = "";
+    public bool IsConnected { get; private set; }
+
+    public Computer(string id, string name, int year, decimal price, int ram, string processor, bool hasGPU) 
         : base(id, name, year, price)
     {
         Ram = ram;
-        CPU = cpu;
-        CoCardroi = cocardroi;
+        Processor = processor;
+        HasGPU = hasGPU;
     }
 
-    public override decimal Tinhtienbaotri()
+    public override decimal CalculateExpectedAnnualMaintenanceCost()
     {
-        decimal tien = Price * 0.05m;
-        if (CoCardroi) 
+        decimal cost = Price * 0.05m;
+        if (HasGPU) 
         {
-            tien += Price * 0.02m;
+            cost += Price * 0.02m;
         }
-       
-        return tien;
+        
+        int age = DateTime.Now.Year - Year;
+        if (age > 5) 
+        {
+            cost += Price * 0.01m;
+        }
+        
+        return cost;
     }
 
-    public void Connect(string ip)
+    public void Connect(string ipAddress)
     {
-        if (string.IsNullOrEmpty(ip) || IsConnected) return;
-        IpAddress = ip;
+        if (string.IsNullOrEmpty(ipAddress) || IsConnected) return;
+        IpAddress = ipAddress;
         IsConnected = true;
     }
 

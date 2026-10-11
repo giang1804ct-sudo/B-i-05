@@ -4,24 +4,23 @@
  * ********************/
  public class Printer : Device
 {
-    public string Loaimay { get; set; } // Laser hoặc In phun
-    public int Sotrangdain { get; set; }
-    public bool Inmau { get; set; }
+    public string Type { get; set; } 
+    public int PrintedPages { get; set; }
+    public bool IsColor { get; set; }
 
-    public Printer(string id, string name, int year, decimal price, string loaiMay, int soTrang, bool inMau) 
+    public Printer(string id, string name, int year, decimal price, string type, int pages, bool isColor) 
         : base(id, name, year, price)
     {
-        Loaimay = loaiMay;
-        Sotrangdain = soTrang;
-        Inmau = inMau;
+        Type = type;
+        PrintedPages = pages;
+        IsColor = isColor;
     }
 
-    public override decimal Tinhtienbaotri()
+    public override decimal CalculateExpectedAnnualMaintenanceCost()
     {
-        decimal tien = Price * 0.04m;
-        if (Sotrangdain > 100000) tien += 500000;
-        if (Inmau) tien += 300000;
-        return tien;
+        decimal cost = Price * 0.04m;
+        if (PrintedPages > 100000) cost += 500000;
+        if (IsColor) cost += 300000;
+        return cost;
     }
 }
-

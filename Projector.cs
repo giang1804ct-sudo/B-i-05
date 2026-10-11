@@ -4,20 +4,23 @@
  * ********************/
  public class Projector : Device
 {
-    public int Dosang { get; set; }
-    public int Giobongden { get; set; }
+    public int Brightness { get; set; }
+    public int LampHours { get; set; }
+    
+        public int MaxLampLife { get; set; } 
 
-    public Projector(string id, string name, int year, decimal price, int dosang, int giobongden) 
+    public Projector(string id, string name, int year, decimal price, int brightness, int lampHours) 
         : base(id, name, year, price)
     {
-        Dosang = dosang;
-        Giobongden = giobongden;
+        Brightness = brightness;
+        LampHours = lampHours;
+        MaxLampLife = 5000; // Giả sử mặc định tuổi thọ bóng đèn là 5000 giờ
     }
 
-    public override decimal Tinhtienbaotri()
+    public override decimal CalculateExpectedAnnualMaintenanceCost()
     {
-        decimal tien = Price * 0.03m;
-        if (Giobongden > 3000) tien += 1500000;
-        return tien;
+        decimal cost = Price * 0.03m;
+        if (LampHours > 3000) cost += 1500000;
+        return cost;
     }
 }

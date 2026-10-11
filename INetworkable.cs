@@ -4,8 +4,8 @@
  * ********************/
  public interface INetworkable
 {
- string IpAddress { get; }
- void Connect(string ip);
- void Disconnect();
- bool IsConnected { get; }
+    string IpAddress { get; }
+    void Connect(string ipAddress);
+    void Disconnect();
+    bool IsConnected { get; }
 }

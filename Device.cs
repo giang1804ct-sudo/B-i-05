@@ -2,7 +2,9 @@
  * Mã sinh viên: 202418889
  * Họ tên: Đặng Thị Hương Giang
  * ********************/
- public abstract class Device
+ using System;
+
+public abstract class Device
 {
     public string Id { get; } 
     public string Name { get; set; }
@@ -12,7 +14,10 @@
 
     public Device(string id, string name, int year, decimal price)
     {
-        // TODO:  check điều kiện (giá > 0, năm...)
+        if (string.IsNullOrEmpty(id)) throw new Exception("Lỗi: Mã thiết bị không được để trống!");
+        if (price <= 0) throw new Exception("Lỗi: Giá mua phải lớn hơn 0");
+        if (year > DateTime.Now.Year) throw new Exception("Lỗi: Năm đưa vào sử dụng không được lớn hơn năm hiện tại");
+
         Id = id;
         Name = name;
         Year = year;
@@ -20,7 +25,7 @@
         Status = DeviceStatus.Active;
     }
 
-    public abstract decimal Tinhtienbaotri(); 
+    public abstract decimal CalculateExpectedAnnualMaintenanceCost(); 
 
     public override string ToString()
     {

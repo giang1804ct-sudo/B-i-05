@@ -4,72 +4,77 @@
  * ********************/
  using System;
 using System.Collections.Generic;
+using System.Text;
 
 class Program
 {
     static void Main(string[] args)
     {
+        
+        Console.OutputEncoding = Encoding.UTF8;
+
         Console.WriteLine("====== QUẢN LÝ THIẾT BỊ LAB ======\n");
 
-        // tạo máy tính
-        Computer mt1 = new Computer("MT01", "Dell Optiplex", 2021, 15000000, 8, "Core i5", false);
-        Computer mt2 = new Computer("MT02", "Alienware", 2018, 30000000, 16, "Core i7", true); 
+        // Tạo máy tính
+        Computer pc1 = new Computer("PC01", "Dell Optiplex", 2021, 15000000, 8, "Core i5", false);
+        Computer pc2 = new Computer("PC02", "Alienware", 2018, 30000000, 16, "Core i7", true); 
         
-        // tạo máy in
-        Printer mayIn1 = new Printer("PR01", "Canon 2900", 2022, 3500000, "Laser", 120000, false); 
-        NetworkPrinter mayIn2 = new NetworkPrinter("PR02", "HP ColorJet", 2023, 8000000, "Ink", 50000, true); 
+        // Tạo máy in
+        Printer prn1 = new Printer("PR01", "Canon 2900", 2022, 3500000, "Laser", 120000, false); 
+        NetworkPrinter prn2 = new NetworkPrinter("PR02", "HP ColorJet", 2023, 8000000, "Ink", 50000, true); 
         
-        // tạo máy chiếu
-        Projector mayChieu1 = new Projector("PJ01", "Sony VPL", 2019, 12000000, 3500, 3200); 
+        // Tạo máy chiếu
+        Projector proj1 = new Projector("PJ01", "Sony VPL", 2019, 12000000, 3500, 3200); 
 
-        // test trạng thái
-        mt1.Status = DeviceStatus.UnderMaintenance; 
+        // Test đổi trạng thái
+        pc1.Status = DeviceStatus.UnderMaintenance; 
 
-        // tạo phòng
-        LabRoom phong1 = new LabRoom("LAB-01", "Phòng TH Phần Mềm", 30);
-        LabRoom phong2 = new LabRoom("LAB-02", "Phòng TH Mạng", 20);
+        // Tạo phòng
+        LabRoom lab1 = new LabRoom("LAB-01", "Phòng TH Phần Mềm", 30);
+        LabRoom lab2 = new LabRoom("LAB-02", "Phòng TH Mạng", 20);
 
-        phong1.ThemThietBi(mt1);
-        phong1.ThemThietBi(mayIn1);
-        phong1.ThemThietBi(mayChieu1);
+        // Gọi các hàm bằng tên tiếng Anh
+        lab1.AddDevice(pc1);
+        lab1.AddDevice(prn1);
+        lab1.AddDevice(proj1);
 
-        phong2.ThemThietBi(mt2);
-        phong2.ThemThietBi(mayIn2);
+        lab2.AddDevice(pc2);
+        lab2.AddDevice(prn2);
 
-        // Test them trung ma
-        Console.WriteLine("=> Thêm máy trùng ID vào Phòng 1:");
-        phong1.ThemThietBi(mt1); 
+        // Test thêm trùng mã
+        Console.WriteLine("=> Thử thêm máy trùng ID vào Phòng 1:");
+        lab1.AddDevice(pc1); 
         Console.WriteLine();
 
-        // In danh sach
+        // In danh sách
         Console.WriteLine("--- DANH SÁCH MÁY PHÒNG 1 ---");
-        foreach (var d in phong1.Laytatcamay()) 
+        foreach (var d in lab1.GetAllDevices()) 
         {
             Console.WriteLine(d.ToString());
         }
-        Console.WriteLine($"-> Tổng tiền bảo trì phòng 1: {phong1.Tinhtongtienbaotri():N0} VND\n");
+        Console.WriteLine($"-> Tổng tiền bảo trì phòng 1: {lab1.CalculateAnnualMaintenanceCost():N0} VND\n");
 
         Console.WriteLine("--- DANH SÁCH MÁY PHÒNG 2 ---");
-        foreach (var d in phong2.Laytatcamay()) Console.WriteLine(d.ToString());
-        Console.WriteLine($"-> Tổng tiền bảo trì phòng 2: {phong2.Tinhtongtienbaotri():N0} VND\n");
+        foreach (var d in lab2.GetAllDevices()) Console.WriteLine(d.ToString());
+        Console.WriteLine($"-> Tổng tiền bảo trì phòng 2: {lab2.CalculateAnnualMaintenanceCost():N0} VND\n");
 
         Console.WriteLine("--- CÁC MÁY CẦN BẢO TRÌ (PHÒNG 1) ---");
-        foreach (var d in phong1.Laymaycanbaotri()) 
+        foreach (var d in lab1.GetDevicesRequiringMaintenance()) 
         {
             Console.WriteLine("- " + d.Name);
         }
         Console.WriteLine();
 
-        // Test interface
+        // Test interface kết nối mạng
         Console.WriteLine("--- TEST KẾT NỐI MẠNG ---");
-        List<Device> tatCaMay = new List<Device> { mt1, mt2, mayIn1, mayIn2, mayChieu1 };
+        List<Device> allDevices = new List<Device> { pc1, pc2, prn1, prn2, proj1 };
         
-        foreach (var d in tatCaMay)
+        foreach (var d in allDevices)
         {
             if (d is INetworkable netDevice) 
             {
                 netDevice.Connect("192.168.1.100");
-                Console.WriteLine($"May {d.Name} đã kết nối vào IP: {netDevice.IpAddress}");
+                Console.WriteLine($"Máy {d.Name} đã kết nối vào IP: {netDevice.IpAddress}");
             }
         }
         
